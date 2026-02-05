@@ -27,18 +27,42 @@ axel@hal9001c:~$ ./usbtreeinfo.sh
 ```
 <sub>Esta captura muestra un ejemplo del script von varios hubs y dispositivos conectados.</small>
 
-## Descripción
+## Descripción:
 
 **USBTreeInfo** Es una herramienta ligera para Linux que visualiza la jerarquía de tus puertos USB, identificando velocidades (colores estándar de la industria) y el consumo de energía (mA) declarado por cada dispositivo.
 
 ### Características:
 
-- 🎨 **Colores industriales:** Blanco (1.1), Gris (2.0), Azul (3.0), Verde (3.1).
+- 🎨 **Colores industriales:** 
+    | Color |
+    |-------|
+    | ⚪ Blanco: USB 1.1 (Low Speed) |
+    | ⚫ Gris: USB 2.0 (High Speed) |
+    | 🔵 Azul: USB 3.0 / 3.1 Gen 1 (SuperSpeed) |
+    | 🟢 Verde: USB 3.1 Gen 2 (SuperSpeed+) |
+    | 🟣 Magenta: USB 3.2 (Gen 2x2) |
+    | 🔴 Rojo: USB4 / Thunderbolt |
+  
 - ⚡ **Monitor de energía:** Muestra los mA por dispositivo y el total por Bus.
 - 🌳 **Árbol limpio:** Elimina duplicados de interfaces y oculta valores de 0mA para mayor claridad.
 - 💻 **Desarrollado en la HAL9001C.**
 
+### 🔍 Anatomía de la salida:
 
+Para entender qué nos dice cada línea, usemos este ejemplo de un dispositivo conectado:
+
+```shell
+|__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 022 - ID 0781:5583 - SanDisk Corp. Ultra Fit [896mA]
+```
+
+| Componente | Descripción  |
+|------------|--------------|
+| 5000M                     | Velocidad: Transferencia máxima teórica (en este caso, 5 Gbps).
+| USB 3.x Gen1 (SuperSpeed) | Protocolo: Clasificación estándar de la industria (SuperSpeed, High Speed, etc.).
+| Dev 022                   | Número de Dispositivo: Asignado por el kernel Linux en el bus actual.
+| ID 0781:5583              | Vendor/Product ID: Identificador único del fabricante y el modelo.
+| SanDisk Corp. Ultra Fit   | Descripción: Nombre del fabricante y modelo del dispositivo.
+| [896mA]                   | Energía: Consumo de corriente declarado por el dispositivo.
 
 ### Instalación rápida
 
