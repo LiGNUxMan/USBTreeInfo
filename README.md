@@ -33,6 +33,7 @@ axel@hal9001c:~$ ./usbtreeinfo.sh
 
 ### Características:
 
+- 🌳 **Árbol limpio:** Elimina duplicados de interfaces y oculta valores de 0mA para mayor claridad.
 - 🎨 **Colores industriales:** 
     | Color |
     |-------|
@@ -44,8 +45,14 @@ axel@hal9001c:~$ ./usbtreeinfo.sh
     | 🔴 Rojo: USB4 / Thunderbolt |
   
 - ⚡ **Monitor de energía:** Muestra los mA por dispositivo y el total por Bus.
-- 🌳 **Árbol limpio:** Elimina duplicados de interfaces y oculta valores de 0mA para mayor claridad.
-- 💻 **Desarrollado en la HAL9001C.**
+- ⚡ Código de Colores y Lógica de Energía
+El sistema de monitoreo eléctrico diferencia visualmente entre consumos parciales y totales:
+
+    🟡 Amarillo [mA]: Representa el consumo individual declarado por cada dispositivo conectado (ej: un mouse, una cámara o un pendrive).
+
+    🔴 Rojo [mA]: Se reserva exclusivamente para los Root Hubs (la raíz del bus). Este valor no es un reporte del hardware en sí, sino la suma total de todos los dispositivos conectados a ese bus, calculada dinámicamente por el script.
+
+    Nota: Si un bus o dispositivo no tiene consumo activo [0mA], el valor se omite para no mostrar datos inutiles.
 
 ### 🔍 Anatomía de la salida:
 
@@ -77,3 +84,23 @@ chmod +x usbtreeinfo.sh
 ```bash
 ./usbtreeinfo.sh
 ```
+
+### Contribuciones
+Cualquier mejora, corrección o sugerencia es bienvenida. ¡Suma tu aporte a este proyecto!
+
+### Autor
+- **Axel O'BRIEN (LiGNUxMan)** - [GitHub Profile](https://github.com/LiGNUxMan/)
+- **Google Gemini** - Asistencia en desarrollo
+
+### Licencia
+Este proyecto se distribuye bajo la licencia **GPLv3**. ¡Úsalo, modifícalo y compártelo libremente!
+- Hecho con 💚 y pasión por el software libre.
+
+### 🚀 Mejoras y funcionalidades futuras
+Estamos buscando colaboradores para seguir mejorando USBTreeInfo. Estas son algunas ideas para futuras versiones:
+
+1️⃣ Agregar el consumo de cada hub inermedio.
+
+**Si te interesa contribuir, ¡abre un issue o haz un pull request! 🤝**
+
+
