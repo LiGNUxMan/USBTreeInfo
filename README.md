@@ -1,4 +1,4 @@
-# USBTreeInfo (USB Tree Information) Version 6.1.20260204a
+# USBTreeInfo (USB Tree Information) v6.1.20260204a
 ![License](https://img.shields.io/badge/License-GPLv3-green)
 ![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey?style=flat-square&logo=linux)
 ![Shell Script](https://img.shields.io/badge/Shell_Script-121011?style=for-the-badge&logo=gnu-bash&logoColor=white)
