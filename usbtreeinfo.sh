@@ -1,10 +1,9 @@
 #!/bin/bash
 # #############################################################################
 #
-# USBTreeInfo Version 6.1.20260204a
+# USBTreeInfo Version 6.1.20260205a
 #
 # Descripción: Visualización de árbol USB con velocidad y consumo (mA)
-#
 # Autor: Axel O'BRIEN (LiGNUxMan) <axelobrien@gmail.com> & Gemini (Google)
 #
 # Uso: axel@hal9001c:~$ ./usbtreeinfo.sh
@@ -78,15 +77,18 @@ lsusb -t | while IFS= read -r line; do
         my_id="${ID_MAP[$key]}"
         my_desc="${DESC_MAP[$key]}"
         
-        # Formatear salida de energía
+        # --- SECCIÓN CORREGIDA PARA FILTRAR 0mA ---
         pwr_text=""
         if [[ "$dev_num" -eq 1 ]]; then
-            # Root Hub: Mostrar suma total del bus
-            pwr_text=" ${TOTAL_PWR_CLR}[${TOTAL_MAP["$current_bus"]}mA]${RESET}"
-        elif [[ "${PWR_MAP[$key]}" -ne 0 ]]; then
-            # Dispositivo con consumo: Mostrar valor individual
+            # Root Hub: Solo mostrar si el total acumulado es mayor a 0
+            if [[ "${TOTAL_MAP["$current_bus"]}" -gt 0 ]]; then
+                pwr_text=" ${TOTAL_PWR_CLR}[${TOTAL_MAP["$current_bus"]}mA]${RESET}"
+            fi
+        elif [[ "${PWR_MAP[$key]}" -gt 0 ]]; then
+            # Dispositivo individual: Solo mostrar si es mayor a 0
             pwr_text=" ${POWER_CLR}[${PWR_MAP[$key]}mA]${RESET}"
         fi
+        # ------------------------------------------
 
         echo -e "${prefix}${speed_fmt} - Dev $(printf "%03d" $dev_num) - ID ${my_id} - ${my_desc}${pwr_text}"
     fi
