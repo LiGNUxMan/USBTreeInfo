@@ -17,7 +17,6 @@ axel@hal9001c:~$ ./usbtreeinfo.sh
         |__ 480M - USB 2.0 (High Speed) - Dev 012 - ID 05e3:0723 - Genesys Logic, Inc. GL827L SD/MMC/MS Flash Card Reader [500mA]
     |__ 480M - USB 2.0 (High Speed) - Dev 002 - ID 05c8:03ab - Cheng Uei Precision Industry Co., Ltd (Foxlink) HP Wide Vision HD Camera [500mA]
     |__ 12M - USB 1.1 (Low Speed) - Dev 003 - ID 8087:0aa7 - Intel Corp. Wireless-AC 3168 Bluetooth [100mA]
-
 /:  5000M - USB 3.x Gen1 (SuperSpeed) - Dev 001 - ID 1d6b:0003 - Linux Foundation 3.0 root hub [2552mA]
     |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 013 - ID 2109:0813 - VIA Labs, Inc. VL813 Hub
         |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 014 - ID 2109:0813 - VIA Labs, Inc. VL813 Hub
