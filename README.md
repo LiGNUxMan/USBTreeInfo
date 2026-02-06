@@ -3,25 +3,27 @@
 ![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey?style=flat-square&logo=linux)
 ![Shell Script](https://img.shields.io/badge/Shell_Script-121011?style=for-the-badge&logo=gnu-bash&logoColor=white)
 
-<img width="1166" height="466" alt="Captura de pantalla de 2026-02-04 22-04-51" src="https://github.com/user-attachments/assets/089c145e-602e-45fd-96a1-fcb17078f429" />
+<img width="1174" height="347" alt="Captura de pantalla de 2026-02-05 23-45-39" src="https://github.com/user-attachments/assets/813075c2-6309-4f8d-90bd-bd18a729b32d" />
+
 
 ```shell
-axel@hal9001c:~$ ./usbtreeinfo.sh
-/:  480M - USB 2.0 (High Speed) - Dev 001 - ID 1d6b:0002 - Linux Foundation 2.0 root hub [1524mA]
-    |__ 480M - USB 2.0 (High Speed) - Dev 008 - ID 2109:2813 - VIA Labs, Inc. VL813 Hub
-        |__ 480M - USB 2.0 (High Speed) - Dev 009 - ID 2109:2813 - VIA Labs, Inc. VL813 Hub
-            |__ 480M - USB 2.0 (High Speed) - Dev 011 - ID 18a5:0302 - Verbatim, Ltd Flash Drive [200mA]
-            |__ 480M - USB 2.0 (High Speed) - Dev 010 - ID 0781:5567 - SanDisk Corp. Cruzer Blade [224mA]
-        |__ 480M - USB 2.0 (High Speed) - Dev 012 - ID 05e3:0723 - Genesys Logic, Inc. GL827L SD/MMC/MS Flash Card Reader [500mA]
+axel@hal9001c:~$ ~/Aplicaciones/usbtreeinfo.sh
+/:  480M - USB 2.0 (High Speed) - Dev 001 - ID 1d6b:0002 - Linux Foundation 2.0 root hub [1424mA]
+    |__ 480M - USB 2.0 (High Speed) - Dev 004 - ID 2109:2813 - VIA Labs, Inc. VL813 Hub
+        |__ 480M - USB 2.0 (High Speed) - Dev 005 - ID 2109:2813 - VIA Labs, Inc. VL813 Hub
+            |__ 480M - USB 2.0 (High Speed) - Dev 009 - ID 0781:5567 - SanDisk Corp. Cruzer Blade [224mA]
+            |__ 480M - USB 2.0 (High Speed) - Dev 008 - ID 05e3:0723 - Genesys Logic, Inc. GL827L SD/MMC/MS Flash Card Reader [500mA]
+            |__ 12M - USB 1.1 (Low Speed) - Dev 007 - ID 1b3f:2008 - Generalplus Technology Inc. USB Audio Device [100mA]
     |__ 480M - USB 2.0 (High Speed) - Dev 002 - ID 05c8:03ab - Cheng Uei Precision Industry Co., Ltd (Foxlink) HP Wide Vision HD Camera [500mA]
     |__ 12M - USB 1.1 (Low Speed) - Dev 003 - ID 8087:0aa7 - Intel Corp. Wireless-AC 3168 Bluetooth [100mA]
 /:  5000M - USB 3.x Gen1 (SuperSpeed) - Dev 001 - ID 1d6b:0003 - Linux Foundation 3.0 root hub [2552mA]
-    |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 013 - ID 2109:0813 - VIA Labs, Inc. VL813 Hub
-        |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 014 - ID 2109:0813 - VIA Labs, Inc. VL813 Hub
-            |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 020 - ID 2109:0715 - VIA Labs, Inc. VL817 SATA Adaptor [896mA]
-        |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 019 - ID 0951:1666 - Kingston Technology DataTraveler 100 G3/G4/SE9 G2/50 Kyson [504mA]
-        |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 021 - ID 2357:0601 - TP-Link UE300 10/100/1000 LAN (ethernet mode) [256mA]
-    |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 022 - ID 0781:5583 - SanDisk Corp. Ultra Fit [896mA]
+    |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 003 - ID 2109:0813 - VIA Labs, Inc. VL813 Hub
+        |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 004 - ID 2109:0813 - VIA Labs, Inc. VL813 Hub
+        |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 006 - ID 2109:0715 - VIA Labs, Inc. VL817 SATA Adaptor [896mA]
+        |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 007 - ID 2357:0601 - TP-Link UE300 10/100/1000 LAN (ethernet mode) [Realtek RTL8153] [256mA]
+        |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 008 - ID 0951:1666 - Kingston Technology DataTraveler 100 G3/G4/SE9 G2/50 Kyson [504mA]
+    |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 005 - ID 7825:a2a4 - Other World Computing External SATA Hard Drive Adapter cable PA023U3 [896mA]
+axel@hal9001c:~$ 
 ```
 <sub>🇺🇸🇬🇧 This screenshot shows an example of the script with multiple hubs and devices connected.</small>
 
