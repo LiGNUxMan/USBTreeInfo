@@ -1,95 +1,142 @@
 #!/bin/bash
-# #############################################################################
 #
-# USBTreeInfo Version 6.1.20260205a
+# USBInfoSpeedTree Version 7.6.20260624a
 #
-# Descripción: Visualización de árbol USB con velocidad y consumo (mA)
-# Autor: Axel O'BRIEN (LiGNUxMan) <axelobrien@gmail.com> & Gemini (Google)
+# Autor: Axel O'BRIEN (LiGNUxMan) axelobrien@gmail.com
 #
-# Uso: axel@hal9001c:~$ ./usbtreeinfo.sh
+# Colaboradores: Antigravity (Google) · Claude (Anthropic)
 #
-# #############################################################################
 
-# Colores (Esquema estándar industrial para LiGNUxMan)
+# --- Configuración de Colores ---
 RESET="\e[0m"
-USB1="\e[97m"      # Blanco: 1.1
-USB2="\e[90m"      # Gris: 2.0
-USB3="\e[34m"      # Azul: 3.0 / 3.1 Gen 1
-USB31="\e[32m"     # Verde: 3.1 Gen 2
-USB32="\e[35m"     # Magenta: 3.2
-USB4="\e[31m"      # Rojo: USB4 / Thunderbolt
-POWER_CLR="\e[33m" # Amarillo: Consumo de dispositivos individuales
-TOTAL_PWR_CLR="\e[31m" # Rojo: Consumo del hub total
+# Versiones USB
+USB1="\e[97m"; USB2="\e[90m"; USB3="\e[34m"; USB31="\e[32m"; USB32="\e[35m"; USB4="\e[31m"
+# Consumo (Axel Premium Style)
+PWR_ROOT="\e[1;31m"; PWR_HUB="\e[1;33m"; PWR_DEV="\e[0;32m" # Verde normal (no negrita) para dispositivos
 
-get_speed_text() {
-    case "$1" in
-        12M)    echo -e "${USB1}12M - USB 1.1 (Low Speed)${RESET}" ;;
-        480M)   echo -e "${USB2}480M - USB 2.0 (High Speed)${RESET}" ;;
-        5000M)  echo -e "${USB3}5000M - USB 3.x Gen1 (SuperSpeed)${RESET}" ;;
-        10000M) echo -e "${USB31}10000M - USB 3.x Gen2 (SuperSpeed+)${RESET}" ;;
-        20000M) echo -e "${USB32}20000M - USB 3.2 Gen2x2${RESET}" ;;
-        40000M) echo -e "${USB4}40000M - USB4 / Thunderbolt${RESET}" ;;
-        *)      echo -e "${1} - USB" ;;
-    esac
+read_sys() {
+    [[ -f "/sys/bus/usb/devices/$1/$2" ]] && cat "/sys/bus/usb/devices/$1/$2" | xargs || echo ""
 }
 
-get_dev_power() {
-    local pwr_path=$(grep -l "^$2$" /sys/bus/usb/devices/${1}-*/devnum 2>/dev/null | sed 's/devnum/bMaxPower/')
-    [[ -f "$pwr_path" ]] && cat "$pwr_path" | tr -d 'mA ' || echo "0"
-}
-
-# 1. Cargar Base de Datos de dispositivos conectados
-declare -A ID_MAP DESC_MAP PWR_MAP TOTAL_MAP
+# 0. Base de datos de nombres desde lsusb (para mejores nombres)
+declare -A LSUSB_NAMES
 while read -r line; do
     bus=$((10#$(echo "$line" | awk '{print $2}')))
     dev=$((10#$(echo "$line" | awk '{print $4}' | tr -d :)))
-    key="${bus}_${dev}"
-    ID_MAP["$key"]=$(echo "$line" | awk '{print $6}')
-    DESC_MAP["$key"]=$(echo "$line" | cut -d' ' -f7-)
-    PWR_MAP["$key"]=$(get_dev_power "$bus" "$dev")
-    # Sumar al total del bus correspondiente
-    TOTAL_MAP["$bus"]=$(( TOTAL_MAP["$bus"] + PWR_MAP["$key"] ))
+    # El nombre empieza después del ID xxxx:xxxx
+    name=$(echo "$line" | cut -d: -f3- | sed 's/^[0-9a-fA-F]\{4\} //')
+    LSUSB_NAMES["${bus}_${dev}"]="$name"
 done < <(lsusb)
 
-# 2. Renderizado del Árbol
-current_bus=""
-LAST_DEV=""
+# 1. Base de Datos de Dispositivos (Usando carpetas de /sys)
+declare -A VIDS PIDS SPEEDS DEVNOMS VERSIONS NAMES OWN_PWR TOTAL_PWR CHILDREN
+declare -a ROOTS
+BASE="/sys/bus/usb/devices/"
 
-lsusb -t | while IFS= read -r line; do
-    # Identificar el bus actual
-    if [[ "$line" =~ Bus\ ([0-9]+) ]]; then
-        current_bus=$((10#${BASH_REMATCH[1]}))
+for dev in $(ls "$BASE" | grep -E '^(usb[0-9]+|[0-9]+-[0-9]+(\.[0-9]+)*)$'); do
+    VIDS["$dev"]=$(read_sys "$dev" "idVendor")
+    PIDS["$dev"]=$(read_sys "$dev" "idProduct")
+    SPEEDS["$dev"]=$(read_sys "$dev" "speed")
+    DEVNOMS["$dev"]=$(read_sys "$dev" "devnum")
+    VERSIONS["$dev"]=$(read_sys "$dev" "version")
+    
+    # Detección de Bus para el mapeo de lsusb
+    if [[ "$dev" == usb* ]]; then
+        c_bus=${dev#usb}
+    else
+        c_bus=${dev%%-*}
     fi
-
-    # Identificar dispositivo
-    if [[ "$line" =~ Dev\ ([0-9]+) ]]; then
-        dev_num=$((10#${BASH_REMATCH[1]}))
-        key="${current_bus}_${dev_num}"
-        
-        # Filtrar interfaces duplicadas (mismo dispositivo)
-        if [[ "$key" == "$LAST_DEV" ]]; then continue; fi
-        LAST_DEV="$key"
-
-        speed_raw=$(echo "$line" | grep -oP '[0-9]+M$')
-        prefix=$(echo "$line" | sed -E 's/(Bus|Port).*//')
-        
-        speed_fmt=$(get_speed_text "$speed_raw")
-        my_id="${ID_MAP[$key]}"
-        my_desc="${DESC_MAP[$key]}"
-        
-        # --- SECCIÓN CORREGIDA PARA FILTRAR 0mA ---
-        pwr_text=""
-        if [[ "$dev_num" -eq 1 ]]; then
-            # Root Hub: Solo mostrar si el total acumulado es mayor a 0
-            if [[ "${TOTAL_MAP["$current_bus"]}" -gt 0 ]]; then
-                pwr_text=" ${TOTAL_PWR_CLR}[${TOTAL_MAP["$current_bus"]}mA]${RESET}"
-            fi
-        elif [[ "${PWR_MAP[$key]}" -gt 0 ]]; then
-            # Dispositivo individual: Solo mostrar si es mayor a 0
-            pwr_text=" ${POWER_CLR}[${PWR_MAP[$key]}mA]${RESET}"
-        fi
-        # ------------------------------------------
-
-        echo -e "${prefix}${speed_fmt} - Dev $(printf "%03d" $dev_num) - ID ${my_id} - ${my_desc}${pwr_text}"
+    c_dev=${DEVNOMS["$dev"]}
+    
+    # Nombre (Prioridad lsusb)
+    ls_name="${LSUSB_NAMES["${c_bus}_${c_dev}"]}"
+    if [[ -n "$ls_name" ]]; then
+        NAMES["$dev"]="$ls_name"
+    elif [[ "${VIDS["$dev"]}" == "1d6b" ]]; then
+        NAMES["$dev"]="Linux Foundation ${VERSIONS["$dev"]} root hub"
+    else
+        m=$(read_sys "$dev" "manufacturer")
+        p=$(read_sys "$dev" "product")
+        NAMES["$dev"]=$(echo "$m $p" | xargs)
+        [[ -z "${NAMES["$dev"]}" ]] && NAMES["$dev"]="Unknown Device"
+    fi
+    
+    # Consumo propio
+    pwr=$(read_sys "$dev" "bMaxPower")
+    OWN_PWR["$dev"]=$(echo "$pwr" | grep -oE '[0-9]+' || echo "0")
+    
+    # Árbol jerárquico por nombre de carpeta
+    if [[ "$dev" == usb* ]]; then
+        ROOTS+=("$dev")
+    else
+        if [[ "$dev" == *.* ]]; then parent="${dev%.*}"; else parent="usb${dev%-*}"; fi
+        CHILDREN["$parent"]+="$dev "
     fi
 done
+
+# 2. Sumatoria Recursiva (Sin subshells para evitar pérdida de datos en arrays)
+RET_PWR=0
+calc_total_pwr() {
+    local node=$1
+    local sum=0
+    
+    # Procesamos hijos recursivamente
+    for child in ${CHILDREN["$node"]}; do
+        calc_total_pwr "$child"
+        sum=$((sum + RET_PWR))
+    done
+    
+    if [[ "${VIDS["$node"]}" == "1d6b" ]]; then
+        TOTAL_PWR["$node"]=$sum
+    else
+        pwr_val=${OWN_PWR["$node"]:-0}
+        TOTAL_PWR["$node"]=$(( sum + pwr_val ))
+    fi
+    RET_PWR=${TOTAL_PWR["$node"]}
+}
+
+for r in "${ROOTS[@]}"; do calc_total_pwr "$r"; done
+
+# 3. Renderizado con lógica de Axel
+render() {
+    local node=$1
+    local level=$2
+    local total=${TOTAL_PWR["$node"]:-0}
+    local spd=${SPEEDS["$node"]:-0}
+    
+    # Indentación
+    local indent=""; for ((i=0; i<level; i++)); do indent+="    "; done
+    local prefix=$([[ $level -eq 0 ]] && echo "/:  " || echo "|__ ")
+    
+    # Color por velocidad (Igual que en Python)
+    local v_color="$USB1"; local v_lab="USB 1.1 (Low Speed)"
+    if [[ $spd -le 12 ]]; then :
+    elif [[ $spd -le 480 ]]; then v_color="$USB2"; v_lab="USB 2.0 (High Speed)"
+    elif [[ $spd -le 5000 ]]; then v_color="$USB3"; v_lab="USB 3.x Gen1 (SuperSpeed)"
+    elif [[ $spd -le 10000 ]]; then v_color="$USB31"; v_lab="USB 3.x Gen2 (SuperSpeed+)"
+    elif [[ $spd -le 20000 ]]; then v_color="$USB32"; v_lab="USB 3.2 Gen2x2 (SuperSpeed++)"
+    else v_color="$USB4"; v_lab="USB 4.0 / Thunderbolt"; fi
+    
+    # Color por tipo (Energía)
+    local p_color=""
+    local p_val=0
+    if [[ $level -eq 0 ]]; then
+        p_color="$PWR_ROOT"; p_val=$total
+    elif [[ -n "${CHILDREN["$node"]}" ]]; then
+        p_color="$PWR_HUB"; p_val=$total
+    else
+        p_color="$PWR_DEV"; p_val=${OWN_PWR["$node"]}
+    fi
+    
+    local p_tag=""
+    [[ $p_val -gt 0 ]] && p_tag=" ${p_color}[${p_val}mA]${RESET}"
+    
+    echo -e "${indent}${prefix}${v_color}${spd}M - ${v_lab}${RESET} - Dev $(printf "%03d" "${DEVNOMS["$node"]}") - ID ${VIDS["$node"]}:${PIDS["$node"]} - ${NAMES["$node"]}${p_tag}"
+    
+    # Ordenar y procesar hijos
+    local sorted_children=$(for c in ${CHILDREN["$node"]}; do echo "${DEVNOMS["$c"]} $c"; done | sort -n | awk '{print $2}')
+    for child in $sorted_children; do render "$child" $((level + 1)); done
+}
+
+# Inicio
+for r in $(echo "${ROOTS[@]}" | tr ' ' '\n' | sort); do render "$r" 0; done
