@@ -4,11 +4,11 @@
 ![Shell Script](https://img.shields.io/badge/Shell_Script-121011?style=for-the-badge&logo=gnu-bash&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
-<img width="1174" alt="usbtreeinfo.sh output" src="assets/usbtreeinfo_sh.png" />
+<img width="1174" alt="usbtreeinfo.sh output" src="usbtreeinfo_sh.png" />
 
 <br>
 
-<img width="1174" alt="usbtreeinfo.py output" src="assets/usbtreeinfo_py.png" />
+<img width="1174" alt="usbtreeinfo.py output" src="usbtreeinfo_py.png" />
 
 <br>
 <br>
