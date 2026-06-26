@@ -1,16 +1,53 @@
 # USBTreeInfo (USB Tree Information) v7.6.20260624a
-![License](https://img.shields.io/badge/License-GPLv3-green)
+
 ![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey?style=flat-square&logo=linux)
-![Shell Script](https://img.shields.io/badge/Shell_Script-121011?style=for-the-badge&logo=gnu-bash&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Shell Script](https://img.shields.io/badge/Shell-Bash-4EAA25?style=flat-square&logo=gnu-bash&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.x-blue?style=flat-square)
+![License](https://img.shields.io/badge/License-GPLv3-green)
+![Version](https://img.shields.io/badge/Version-7.6.20260624a-orange?style=flat-square)
 
 <img width="1174" alt="usbtreeinfo.sh output" src="usbtreeinfo_sh.png" />
+
+<br>
+
+```
+axel@hal9001c:~$ ~/Aplicaciones/usbtreeinfo/usbtreeinfo.sh
+/:  480M - USB 2.0 (High Speed) - Dev 001 - ID 1d6b:0002 - Linux Foundation 2.0 root hub [702mA]
+    |__ 480M - USB 2.0 (High Speed) - Dev 002 - ID 05c8:03ab - Cheng Uei Precision Industry Co., Ltd (Foxlink) HP Wide Vision HD Camera [500mA]
+    |__ 12M - USB 1.1 (Low Speed) - Dev 003 - ID 8087:0aa7 - Intel Corp. Wireless-AC 3168 Bluetooth [100mA]
+    |__ 480M - USB 2.0 (High Speed) - Dev 004 - ID 2109:2813 - VIA Labs, Inc. VL813 Hub [102mA]
+        |__ 480M - USB 2.0 (High Speed) - Dev 005 - ID 2109:2813 - VIA Labs, Inc. VL813 Hub [100mA]
+            |__ 12M - USB 1.1 (Low Speed) - Dev 006 - ID 1b3f:2008 - Generalplus Technology Inc. USB Audio Device [100mA]
+        |__ 480M - USB 2.0 (High Speed) - Dev 007 - ID 04e8:344f - Samsung Electronics Co., Ltd SCX-3400 Series [2mA]
+/:  5000M - USB 3.x Gen1 (SuperSpeed) - Dev 001 - ID 1d6b:0003 - Linux Foundation 3.0 root hub [648mA]
+    |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 002 - ID 2109:0813 - VIA Labs, Inc. VL813 Hub [648mA]
+        |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 003 - ID 2109:0813 - VIA Labs, Inc. VL813 Hub [504mA]
+            |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 005 - ID 0951:1666 - Kingston Technology DataTraveler 100 G3/G4/SE9 G2/50 Kyson [504mA]
+        |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 004 - ID 346d:5678 - USB Disk 20 [144mA]
+```
 
 <br>
 
 <img width="1174" alt="usbtreeinfo.py output" src="usbtreeinfo_py.png" />
 
 <br>
+
+```
+axel@hal9001c:~$ python3 ~/Aplicaciones/usbtreeinfo/usbtreeinfo.py
+/:  480M - USB 2.0 (High Speed) - Dev 001 - ID 1d6b:0002 - Linux Foundation 2.0 root hub [702mA]
+    |__ 480M - USB 2.0 (High Speed) - Dev 002 - ID 05c8:03ab - Cheng Uei Precision Industry Co., Ltd (Foxlink) HP Wide Vision HD Camera [500mA]
+    |__ 12M - USB 1.1 (Low Speed) - Dev 003 - ID 8087:0aa7 - Intel Corp. Wireless-AC 3168 Bluetooth [100mA]
+    |__ 480M - USB 2.0 (High Speed) - Dev 004 - ID 2109:2813 - VIA Labs, Inc. VL813 Hub [102mA]
+        |__ 480M - USB 2.0 (High Speed) - Dev 005 - ID 2109:2813 - VIA Labs, Inc. VL813 Hub [100mA]
+            |__ 12M - USB 1.1 (Low Speed) - Dev 006 - ID 1b3f:2008 - Generalplus Technology Inc. USB Audio Device [100mA]
+        |__ 480M - USB 2.0 (High Speed) - Dev 007 - ID 04e8:344f - Samsung Electronics Co., Ltd SCX-3400 Series [2mA]
+/:  5000M - USB 3.x Gen1 (SuperSpeed) - Dev 001 - ID 1d6b:0003 - Linux Foundation 3.0 root hub [648mA]
+    |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 002 - ID 2109:0813 - VIA Labs, Inc. VL813 Hub [648mA]
+        |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 003 - ID 2109:0813 - VIA Labs, Inc. VL813 Hub [504mA]
+            |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 005 - ID 0951:1666 - Kingston Technology DataTraveler 100 G3/G4/SE9 G2/50 Kyson [504mA]
+        |__ 5000M - USB 3.x Gen1 (SuperSpeed) - Dev 004 - ID 346d:5678 - USB Disk 20 [144mA]
+```
+
 <br>
 
 <sub>🇺🇸🇬🇧 These screenshots show the Shell (.sh) and Python (.py) versions, both producing identical output, including nested hubs and intermediate power consumption.</sub>
